@@ -4,6 +4,16 @@ import random
 import copy
 import string
 def check_if_possible(board , word , key , i , j) :
+    
+    '''
+    This function will check if it is possible to place a word based off of the starting position of the word (i , j), and the direction of
+    the word (key).
+    If the word neatly fits in the board without overlapping any other placed words or going off of the edge of the board, then the function 
+    will return True. However, if the word overlaps with any other already placed words, or if the word is too long to fit in a specific
+    position, then, the function will return False.
+    Empty cells are "0", in the board.
+    '''
+    
     is_valid = True
     counters = 0
     if key == "up" :
@@ -85,6 +95,19 @@ def check_if_possible(board , word , key , i , j) :
 done = False
 new_board = []
 def generate_board(board , words , curr_index) :
+    
+        '''
+        This function randomly chooses a 'key' in the list 'l', to determine which direction the current word should be placed as. Then,
+        it will loop through the length of the board, and, the width of the board (i , j) to determine which starting points are valid for
+        placing the word. It checks this using the check_if_possible() function.
+        If it finds a valid starting_point, it recurses to the next word. The function keeps recursing until all the words have been validly
+        placed.
+
+        Once the function successfully places all of the words, the done variable will be equivalent to True, and, all other recursion
+        stacks that were currently running will stop. It will append the valid board to the 'new_board' variable, and then the program will
+        use reportlab to output a pdf using the 'new_board' variable.
+        '''
+    
         global done
         if done == True :
             return;
@@ -270,8 +293,12 @@ def generate_board(board , words , curr_index) :
 
 width = 16
 height = 16
+
+#Each empty cell is "0". If the empty cell is not "0", then, that means that the cell is storing a letter for a word.
 board = [["0" for _ in range(width)] for _ in range(height)]
 
+#This is where we take in user input using the command line for the 'words' list. You MUST have less than or equal to 20 words, and, the
+#words must not have a greater length than 8.
 words = []
 counter = 1;
 print("~~You May Have A Maximum Of 20 Words~~")
@@ -297,6 +324,24 @@ my_canvas.drawString(225 , 775 , "Word Search")
 my_canvas.setFont("Times-Roman" , 12)
 
 def draw_out_board(board) : 
+    
+    '''
+    This function is used for carving out a board in a pdf using reportlab.
+    It uses the starting points 'startnig_x' and 'starting_y' as the starting points to place the FIRST cell in our board. Then, for each
+    cell, it draw out a frame around the cell. If the cell is NOT empty (if it does NOT equal "0"), then, it writes whatever letter is in
+    in the cell into the pdf. Howevery, if the cell IS empty (if it DOES equal "0"), then, it randomly chooses a letter to write out inside
+    of the cell.
+    25 pixels will be added 'starting_x' to move 25 pixels to the right, for the new cell.
+    Once a row in the board has all been draw out, 25 pixels will be subtracting from 'starting_y' to move down 25 pixels. 'starting_x' will
+    also be restarting to 100, to place the first cell in the new row.
+
+    Once finished setting up the board, the function then moves on to writing all of the words in the 'words' list for the player to find.
+    It uses a 'counters' variable to keep track of each word in the list. It moves down the 'starting_y' variable for each word by 25 pixels,
+    and, when the 'starting_y' variable gets too low (it starts getting out of the pdf file), it gets restarted back up to the next column,
+    and we move the 'starting_x' variable to the right by 25 pixels.
+    '''
+    
+    #This is where we carve out the board in the pdf file.
     starting_x = 100
     starting_y = 750
     for row in board : 
@@ -314,7 +359,8 @@ def draw_out_board(board) :
         starting_x = 100
     my_canvas.line(starting_x + (25 * len(board[0])) , 750 , starting_x + (25 * len(board[0])) , starting_y)
     my_canvas.line(starting_x , starting_y ,  starting_x + (25 * len(board[0])) , starting_y)
-    
+
+    #This is where we write all of the words.
     starting_y -= 50
     my_canvas.drawString(starting_x , starting_y , "The Words: ")
     counters = 1
