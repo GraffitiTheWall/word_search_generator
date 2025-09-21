@@ -7,4 +7,4 @@ max_word_length = 8 characters.
 
 max_words_in_a_word_search = 20 words.
 
-This wordsearch supports diagonal , reverse diagonal, upwards, and, downwards placements for the words!
+This word_search generator supports diagonal , reverse diagonal, upwards, and, downwards placements for the words!
